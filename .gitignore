@@ -57,6 +57,8 @@ xcuserdata
 !project.pbxproj
 proj.ios_mac/.idea/*
 
+*.app
+
 #.LSOverride#
 
 # Generated files in the Android project #
@@ -81,7 +83,6 @@ proj.android/libraries/*/bin/*
 proj.android/libraries/*/.idea/*
 proj.android/libraries/*/*.iml
 proj.android/libraries/*/local.properties
-
 
 *.apk
 
