@@ -631,9 +631,10 @@ function string.formatnumberthousands(num)
     return formatted
 end
 
-function ccui.Button:addEvent (handler)
+function ccui.Button:addEvent (handler, isNoSound)
     self:addTouchEventListener(function(obj, event)
         if event == 2 then
+            ccexp.AudioEngine:play2d("audio/001.mp3", false, cc.UserDefault:getInstance():getIntegerForKey("sound", 100)/100)
             handler()
         end
     end)

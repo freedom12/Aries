@@ -78,8 +78,8 @@ function Panel:ctor()
         self:setSound(per)
     end)
 
-    self:setMusic(cc.UserDefault:getInstance():getIntegerForKey("music"))
-    self:setSound(cc.UserDefault:getInstance():getIntegerForKey("sound"))
+    self:setMusic(cc.UserDefault:getInstance():getIntegerForKey("music", 100))
+    self:setSound(cc.UserDefault:getInstance():getIntegerForKey("sound", 100))
 end
 
 function Panel:logout ()
@@ -97,7 +97,7 @@ function Panel:setMusic (per)
     cc.UserDefault:getInstance():setIntegerForKey("music", per)
     local x = per/100*459 + 870
     self.musicBtn:setPositionX(x)
-    AudioEngine.setMusicVolume(per/100)
+    ccexp.AudioEngine:setVolume(BGM, cc.UserDefault:getInstance():getIntegerForKey("music", 100)/100)
 end
 
 function Panel:setSound (per)

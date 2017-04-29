@@ -20,6 +20,10 @@ function Unit:setState (state)
     self.state = state
 end
 
+function Unit:setEnabled (bool)
+    self.view:setEnabled(bool)
+end
+
 function Unit:auto()
     if not DataMgr:isLogin() or not DataMgr.data.company then
         return

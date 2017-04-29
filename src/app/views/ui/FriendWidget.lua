@@ -37,6 +37,7 @@ function Widget:setData (data)
     self.nameLab:setString("姓名："..self.data.name)
     self.telLab:setString("电话："..self.data.tel)
     self.btn:addEvent(function()
+        DataMgr.selectFriendName = self.data.name
         NetMgr:getCompanyInfo(self.data.tel)
         UIMgr:hide("FriendPanel")
     end)

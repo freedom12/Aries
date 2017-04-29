@@ -10,18 +10,31 @@ function Widget:ctor(data)
         :addTo(self)
 
     self.titleLab = cc.Label:createWithSystemFont("主题：--", "Arial", 35)
-        :move(0, 25)
+        :move(-15, 25)
         :addTo(self)
     self.titleLab:setColor(display.COLOR_TXT)
     self.titleLab:setAlignment(0, 1)
     self.titleLab:setDimensions(400, 35)
 
     self.senderLab = cc.Label:createWithSystemFont("发件人：--", "Arial", 35)
-        :move(0, -25)
+        :move(-15, -25)
         :addTo(self)
     self.senderLab:setColor(display.COLOR_TXT)
     self.senderLab:setAlignment(0, 1)
     self.senderLab:setDimensions(400, 35)
+
+    -- self.btn = ccui.Button:create("ui/icon_search.png")
+    --     :addTo(self)
+    -- self.btn:setOpacity(0)
+    -- self.btn:setScale9Enabled(true)
+    -- self.btn:setCapInsets(cc.rect(15, 15, 1, 2))
+    -- self.btn:setContentSize(cc.size(690, 135))
+
+    self.btn = ccui.Button:create("ui/btn_4.png")
+        :move(235, 0)
+        :addTo(self)
+    self.btn:setTitleText("查看")
+    self.btn:setTitleFontSize(30)
 
     self:setData(self.data)
 end
@@ -38,8 +51,52 @@ function Widget:setData (data)
     else
         type = "转账信息"
     end
+
+    if self.data.state == 1 then
+        local glProgramState = cc.GLProgramState:getOrCreateWithGLProgramName("ShaderUIGrayScale")
+        self.bg:setGLProgramState(glProgramState)
+        self.img:setGLProgramState(glProgramState)
+    end
     self.titleLab:setString("主题：" .. type)
     self.senderLab:setString("发件人：" .. self.data.from)
+    self.btn:addEvent(function() self:show() end)
+end
+
+function Widget:show ()
+    local date = string.split(self.data.date, " ")[1]
+    local str = self.data.content .. "\n\n                                       "..date
+    local panel = UIMgr:show("ConfirmPanel", str)
+    panel.lab:setAlignment(0, 1)
+
+    local id = self.data.id
+    local type = self.data.transType
+    local transferNo = self.data.transferNo
+    NetMgr:readMail(id)
+
+    panel:setNoHandler(function()
+        NetMgr:delMail(id)
+        UIMgr:hide("ConfirmPanel")
+    end)
+
+    if type == 1 or type == 2 then
+        panel.yesBtn.txt:setVisible(false)
+        panel.yesBtn:setTitleText("确认")
+        panel.yesBtn:setTitleFontSize(30)
+        panel.noBtn.txt:setVisible(false)
+        panel.noBtn:setTitleText("删除")
+        panel.noBtn:setTitleFontSize(30)
+        panel:setYesHandler(function()
+            UIMgr:hide("ConfirmPanel")
+            if type == 1 then
+                NetMgr:transferEnsure1(transferNo)
+            elseif type == 2 then
+                NetMgr:transferEnsure2(transferNo)
+            end
+        end)
+    else
+        panel.yesBtn:setVisible(false)
+        panel.noBtn:setPositionX(CC_DESIGN_RESOLUTION.width/2)
+    end
 end
 
 return Widget

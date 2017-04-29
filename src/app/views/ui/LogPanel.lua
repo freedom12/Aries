@@ -124,15 +124,18 @@ function Panel:setData (data)
         self.dateLabList[i] = lab
     end
 
-    for i, v in ipairs(self.data) do
-        if i > 7 then
-            return
-        end
+    table.sort(self.data, function(a, b)
+        return a.validDate < b.validDate
+    end)
+    local index = 0
+    for i = math.max(#self.data-7, 1), #self.data do
+        index = index + 1
+        local v = self.data[i]
         local list = string.split(v.validDate, "-")
-        self.dateLabList[i]:setString(list[2].."."..list[3])
+        self.dateLabList[index]:setString(list[2].."."..list[3])
         local rate = v.rateDay
         local img = display.newSprite("ui/shape_2.png")
-            :move(dw*i, 0)
+            :move(dw*index, 0)
             :addTo(self.node)
         img:setAnchorPoint(cc.p(0.5, 0))
         img:setScaleY(max/nh*dh*rate/img:getContentSize().height)

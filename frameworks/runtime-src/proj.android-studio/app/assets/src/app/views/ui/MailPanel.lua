@@ -75,6 +75,9 @@ function Panel:setData(data)
         return
     end
     self.data = data.result.list
+    table.sort(self.data, function(a, b)
+        return a.gDate > b.gDate
+    end)
     local size = self.scroll:getContentSize()
     local num = #self.data
     local h = 135*num+15*(num+1)

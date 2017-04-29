@@ -26,7 +26,7 @@ function Panel:ctor(str)
         UIMgr:hide("ConfirmPanel")
     end)
 
-    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(600, 42)})
+    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(600, 50)})
         :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+70)
         :addTo(self)
     self.input = ccui.TextField:create()

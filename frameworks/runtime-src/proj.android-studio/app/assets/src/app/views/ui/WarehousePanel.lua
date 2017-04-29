@@ -4,7 +4,7 @@ function Panel:ctor()
     self.index = 0
     self.subPanel = nil
     self.subPanelList = {
-        require ("app.views.ui.WarehouseSubPanel1"),
+        require ("app.views.ui.ExchangePanel"),
         require ("app.views.ui.WarehouseSubPanel2"),
     }
     display.newSprite("ui/bg_2.png", {capInsets=cc.rect(113, 101, 2, 2), size=cc.size(840, 545)})

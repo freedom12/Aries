@@ -9,7 +9,20 @@ function SubPanel:ctor()
     self.scroll:setContentSize(cc.size(750, 340))
     self.scroll:setInnerContainerSize(cc.size(750, 340))
     self.scroll:setBounceEnabled(true)
-    
+
+    local lab = cc.Label:createWithSystemFont("自己产值", "Arial", 25)
+        :move(1080, 930)
+        :addTo(self)
+    lab:setColor(display.COLOR_TXT)
+    local lab = cc.Label:createWithSystemFont("好友产值", "Arial", 25)
+        :move(1200, 930)
+        :addTo(self)
+    lab:setColor(display.COLOR_TXT)
+    local lab = cc.Label:createWithSystemFont("总产值", "Arial", 25)
+        :move(1320, 930)
+        :addTo(self)
+    lab:setColor(display.COLOR_TXT)
+
     self:enableNodeEvents()
     NetMgr:getTakeLog()
 end

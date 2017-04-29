@@ -36,12 +36,12 @@ function Panel:ctor(str)
         UIMgr:hide("ConfirmPanel")
     end)
 
-    local lab = cc.Label:createWithSystemFont(str or "", "Arial", 40)
+    self.lab = cc.Label:createWithSystemFont(str or "", "Arial", 40)
         :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+70)
         :addTo(self)
-    lab:setColor(display.COLOR_TXT)
-    lab:setAlignment(1, 1)
-    lab:setDimensions(700, 300)
+    self.lab:setColor(display.COLOR_TXT)
+    self.lab:setAlignment(1, 1)
+    self.lab:setDimensions(700, 300)
 end
 
 function Panel:setYesHandler (handler)

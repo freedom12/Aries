@@ -18,6 +18,7 @@ SEARCH = "SEARCH"
 SEND_SUGGEST = "SEND_SUGGEST"
 TRANSFER = "TRANSFER"
 UPDATE_INFO = "UPDATE_INFO"
+NEW_MAIL = "NEW_MAIL"
 function Mgr:init (scene)
     self:bind(scene)
 end

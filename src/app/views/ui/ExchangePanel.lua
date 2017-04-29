@@ -2,20 +2,20 @@ local Panel = class("ExchangePanel", cc.Node)
 
 function Panel:ctor()
     self.num = 0
-    display.newSprite("ui/bg_2.png", {capInsets=cc.rect(113, 101, 2, 2), size=cc.size(660, 490)})
-        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2)
-        :addTo(self)
-
-    display.newSprite("ui/bg_4.png", {capInsets=cc.rect(45, 45, 2, 2), size=cc.size(600, 310)})
-        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+60)
-        :addTo(self)
-
+    -- display.newSprite("ui/bg_2.png", {capInsets=cc.rect(113, 101, 2, 2), size=cc.size(660, 490)})
+    --     :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2)
+    --     :addTo(self)
+    --
+    -- display.newSprite("ui/bg_4.png", {capInsets=cc.rect(45, 45, 2, 2), size=cc.size(600, 310)})
+    --     :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+60)
+    --     :addTo(self)
+    --
     display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(220, 42)})
         :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+25)
         :addTo(self)
 
-    local lab = cc.Label:createWithSystemFont("请输入您要兑换的数量", "Arial", 50)
-        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+150)
+    local lab = cc.Label:createWithSystemFont("请输入您要兑换的数量", "Arial", 40)
+        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+100)
         :addTo(self)
     lab:setColor(display.COLOR_TXT)
 
@@ -50,7 +50,7 @@ function Panel:ctor()
     end)
 
     self.yesBtn = ccui.Button:create("ui/btn_2.png")
-        :move(CC_DESIGN_RESOLUTION.width/2-125, CC_DESIGN_RESOLUTION.height/2-165)
+        :move(CC_DESIGN_RESOLUTION.width/2-125, CC_DESIGN_RESOLUTION.height/2-130)
         :addTo(self)
     self.yesBtn.txt = display.newSprite("ui/txt_duihuan.png")
         :move(209/2, 72/2)
@@ -60,7 +60,7 @@ function Panel:ctor()
     end)
 
     self.noBtn = ccui.Button:create("ui/btn_2.png")
-        :move(CC_DESIGN_RESOLUTION.width/2+125, CC_DESIGN_RESOLUTION.height/2-165)
+        :move(CC_DESIGN_RESOLUTION.width/2+125, CC_DESIGN_RESOLUTION.height/2-130)
         :addTo(self)
     self.noBtn.txt = display.newSprite("ui/txt_quxiao.png")
         :move(209/2, 72/2)

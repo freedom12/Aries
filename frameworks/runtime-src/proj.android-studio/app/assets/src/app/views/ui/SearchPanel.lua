@@ -149,8 +149,8 @@ function Panel:setData (data)
     self.data = data.result
     self.nameLab:setString("姓名："..self.data.userName)
     self.telLab:setString("手机号："..self.data.tel)
-    self.pnameLab:setString("推荐人姓名："..self.data.parentUserName)
-    self.ptelLab:setString("推荐人手机号："..self.data.parentTel)
+    self.pnameLab:setString("推荐人姓名："..(self.data.parentUserName or "--"))
+    self.ptelLab:setString("推荐人手机号："..(self.data.parentTel or "--"))
 end
 
 function Panel:search()
@@ -188,7 +188,7 @@ function Panel:transfer ()
         end
 
         NetMgr:transfer(tel, num, str)
-        UIMgr:hide("ConfirmPanel")
+        UIMgr:hide("InputPanel")
     end)
 end
 

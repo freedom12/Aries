@@ -56,7 +56,7 @@ function Widget:onExit ()
 end
 
 function Widget:setData ()
-    local data = DataMgr.data.company.unitList[self.index]
+    local data = DataMgr:getCompany().unitList[self.index]
     self.rateLab:setString("产值："..(data.value-data.lockValue))
     self.numLab:setString(data.value)
     self.jobLab:setString("职位："..DataMgr:getUnitName(data.lockValue))
@@ -71,7 +71,16 @@ function Widget:setData ()
 end
 
 function Widget:upgrade ()
-    NetMgr:upgrade(self.index)
+    local data = DataMgr:getCompany().unitList[self.index]
+    local type = DataMgr:getUnitIndex(data.lockValue)
+    local cost = DataMgr.priceCfg[type+1]
+    local name = DataMgr:getUnitName(cost)
+    local str = "是否花费"..(cost-data.lockValue).."升职为"..name.."为您工作？"
+    local panel = UIMgr:show("ConfirmPanel", str)
+    panel:setYesHandler(function()
+        NetMgr:upgrade(self.index)
+        UIMgr:hide("ConfirmPanel")
+    end)
 end
 
 return Widget

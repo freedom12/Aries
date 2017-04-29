@@ -1,11 +1,7 @@
 local Mgr = {}
-Mgr.url = "http://www.panguclub.net:8080/bossCountry/"
+Mgr.url = "http://www.qmboss.top:8080/bossCountry/"
 Mgr.session = ""
-function Mgr:send (url, data, handler, isDebug)
-    if isDebug then
-        handler()
-        return
-    end
+function Mgr:send (url, data, handler, isHideWait)
     local xhr = cc.XMLHttpRequest:new()
     xhr.responseType = cc.XMLHTTPREQUEST_RESPONSE_JSON
     xhr.responseType = cc.XMLHTTPREQUEST_RESPONSE_STRING
@@ -41,7 +37,10 @@ function Mgr:send (url, data, handler, isDebug)
 
     xhr:registerScriptHandler(onReadyStateChange)
     xhr:send(data)
-    UIMgr:showWait()
+
+    if not isHideWait then
+        UIMgr:showWait()
+    end
 end
 
 function Mgr:login(usr, pwd)
@@ -69,12 +68,11 @@ end
 
 function Mgr:logout ()
     DataMgr:clear()
-    self.session = ""
     local url = Mgr.url.."member/logout.do"
     self:send(url, data, function(data)
         if data.code and data.code ~= 0 then
-            UIMgr:warn(data.message)
-            print("CODE:"..data.code.."  MESSAGE:"..data.message)
+            UIMgr:warn(data.msg)
+            print("CODE:"..data.code.."  MESSAGE:"..data.msg)
             return
         end
         DataMgr:clear()
@@ -115,13 +113,15 @@ function Mgr:updateInfo ()
 end
 
 function Mgr:changeName (name)
-    local url = Mgr.url.."member/updateMember.do"
-    self:send(url, "gUsername="..name, function(data)
+    local url = Mgr.url.."member/updateMemberInfo.do?gUsername="..name
+    print(url)
+    self:send(url, data, function(data)
         if data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             return
         end
-        DataMgr:setUsr().name = name
+
+        DataMgr:getUsr().name = name
 
         local e = {
             name = UPDATE_INFO,
@@ -131,19 +131,19 @@ function Mgr:changeName (name)
     end)
 end
 
-function Mgr:changePwd (pwd)
-    local url = Mgr.url.."member/updateMember.do"
-    self:send(url, "gPassword="..pwd, function(data)
+function Mgr:changePwd (old, new)
+    local url = Mgr.url.."member/updatePassword.do".."?passwordOld="..old.."&passwordNew="..new
+    self:send(url, data, function(data)
         if data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             return
         end
 
-        local e = {
-            name = UPDATE_INFO,
-            data = data
-        }
-        EventMgr:dispatchEvent(e)
+        -- local e = {
+        --     name = UPDATE_INFO,
+        --     data = data
+        -- }
+        -- EventMgr:dispatchEvent(e)
     end)
 end
 
@@ -216,7 +216,7 @@ function Mgr:employee (index, type)
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("雇佣成功")
         local e = {
             name = COMPANY_EMPLOYEE,
             data = data
@@ -239,6 +239,7 @@ function Mgr:upgrade (index, type)
             name = COMPANY_UPGRADE,
             data = data
         }
+        UIMgr:warn("升职成功")
         EventMgr:dispatchEvent(e)
         self:updateInfo()
     end)
@@ -253,7 +254,7 @@ function Mgr:regist (name, tel, pwd, wechat, alipay)
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("邀请成功")
         local e = {
             name = REGIST,
             data = data
@@ -269,7 +270,7 @@ function Mgr:sign ()
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("签到成功")
         local e = {
             name = COMPANY_SIGN,
             data = data
@@ -288,7 +289,9 @@ function Mgr:take (index)
             UIMgr:warn(data.result.message)
             return
         end
-
+        local data = DataMgr:getCompany().unitList[index]
+        local num = data.value-data.lockValue
+        UIMgr:warn("收获"..num.."产值")
         local e = {
             name = COMPANY_TAKE,
             data = data
@@ -307,7 +310,7 @@ function Mgr:auto ()
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("雇佣前台成功")
         local e = {
             name = COMPANY_AUTO,
             data = data
@@ -326,7 +329,7 @@ function Mgr:exchange (num)
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("兑换"..num.."金币成功")
         local e = {
             name = COMPANY_EXCHANGE,
             data = data
@@ -350,6 +353,30 @@ function Mgr:getMail ()
             data = data
         }
         EventMgr:dispatchEvent(e)
+    end)
+end
+
+function Mgr:readMail (id)
+    local url = Mgr.url.."mail/changeState.do?id="..id.."&state=1"
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+
+        self:getMail()
+    end)
+end
+
+function Mgr:delMail (id)
+    local url = Mgr.url.."mail/changeState.do?id="..id.."&state=2"
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+
+        self:getMail()
     end)
 end
 
@@ -401,6 +428,22 @@ function Mgr:getFriend ()
     end)
 end
 
+function Mgr:getFriendByGap (gap)
+    local url = Mgr.url.."member/memberFriendsByGap.do?gap="..gap
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+
+        local e = {
+            name = FEIEND,
+            data = data
+        }
+        EventMgr:dispatchEvent(e)
+    end)
+end
+
 function Mgr:steal (tel)
     local url = Mgr.url.."company/getFriendsBenefit.do?tel="..tel
     self:send(url, data, function(data)
@@ -408,7 +451,7 @@ function Mgr:steal (tel)
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("收获好友产值成功")
         local e = {
             name = COMPANY_STEAL,
             data = data
@@ -426,7 +469,7 @@ function Mgr:sendSuggest (str)
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("留言成功")
         local e = {
             name = SEND_SUGGEST,
             data = data
@@ -453,20 +496,61 @@ function Mgr:search (tel)
 end
 
 function Mgr:transfer (tel, num, password)
-    local url = Mgr.url.."transfer/apply.do?toTel="..tel.."&amount="..num
+    local url = Mgr.url.."transfer/apply.do?toTel="..tel.."&amount="..num.."&passwordii="..password
     print(url)
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             return
         end
-
+        UIMgr:warn("请求转账成功")
         local e = {
             name = TRANSFER,
             data = data
         }
         EventMgr:dispatchEvent(e)
     end)
+end
+
+function Mgr:transferEnsure1 (no)
+    local url = Mgr.url.."transfer/getEnsure.do?transferNo="..no
+    print(url)
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+    end)
+end
+
+function Mgr:transferEnsure2 (no)
+    local url = Mgr.url.."transfer/applyEnsure.do?transferNo="..no
+    print(url)
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+    end)
+end
+
+function Mgr:polling ()
+    local url = Mgr.url.."company/getInformation.do?"
+
+    self:send(url, data, function(data)
+        if data.result and type(data.result) == "table" and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+        local tmp = bit.band(data.result, 0x1)
+        if tmp==1 then
+            local e = {
+                name = NEW_MAIL,
+                data = data
+            }
+            EventMgr:dispatchEvent(e)
+        end
+    end, true)
 end
 
 return Mgr

@@ -1,9 +1,9 @@
 local LoginScene = class("LoginScene", cc.load("mvc").ViewBase)
 
 function LoginScene:onCreate()
-    AudioEngine.setMusicVolume(cc.UserDefault:getInstance():getIntegerForKey("music")/100)
-    AudioEngine.setEffectsVolume(cc.UserDefault:getInstance():getIntegerForKey("sound")/100)
-
+    if not BGM then
+        BGM = ccexp.AudioEngine:play2d("audio/bgm.mp3", true, cc.UserDefault:getInstance():getIntegerForKey("music", 100)/100)
+    end
     EventMgr:init(self)
     UIMgr:init(self)
 

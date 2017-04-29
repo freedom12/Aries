@@ -9,10 +9,6 @@ NORMAL_STATE = 0
 TAKE_STATE = 1
 
 function MainScene:onCreate()
-    AudioEngine.playMusic("audio/bgm.mp3", true)
-    AudioEngine.setMusicVolume(cc.UserDefault:getInstance():getIntegerForKey("music")/100)
-    AudioEngine.setEffectsVolume(cc.UserDefault:getInstance():getIntegerForKey("sound")/100)
-
     self.state = NORMAL_STATE
     self.companyData = nil
     EventMgr:init(self)
@@ -32,6 +28,8 @@ function MainScene:onEnter ()
         app:enterScene("LoginScene")
     end)
     self.eventList[2] = EventMgr:addEventListener(UPDATE_INFO, function(e)
+        print(self.companyData)
+        print(DataMgr:getCompany())
         if self.companyData.tel == DataMgr:getCompany().tel then
             self.companyData = DataMgr:getCompany()
         end
@@ -40,6 +38,15 @@ function MainScene:onEnter ()
     self.eventList[3] = EventMgr:addEventListener(COMPANY_INFO, function(e)
         self.companyData = e.data
         self:updateUnit()
+    end)
+
+    self.time = 0
+    self.scheduleId = self:scheduleUpdate(function(dt)
+        self.time = self.time + dt
+        if self.time >= 5 then
+            self.time = 0
+            NetMgr:polling()
+        end
     end)
 end
 
@@ -66,6 +73,14 @@ function MainScene:initBg ()
         local x, y = self.bg:getPosition()
         local size = self.bg:getContentSize()
         local dy = (CC_DESIGN_RESOLUTION.height-display.height)/2
+        if y+p.y > dy+size.height/2 then
+            y = dy+size.height/2
+        elseif y+p.y < -dy+size.height/2 then
+        y = -dy+size.height/2
+        else
+            y = y+p.y
+        end
+        self.bg:setPosition(x, y)
     end, cc.Handler.EVENT_TOUCH_MOVED)
     listener:registerScriptHandler(function(touch, event)
         return true
@@ -109,13 +124,15 @@ function MainScene:updateUnit()
     end
 
     if self.companyData.tel == DataMgr:getCompany().tel then
+        self.autoUnit:setEnabled(true)
         self.panel:setState(1)
+        self.panel:setData()
         self.panel:setTakeBtnVisible(true)
         self.panel:setTakeHandler(function() self:takeHandler() end)
         for i, v in ipairs(self.unitList) do
             local data = self.companyData.unitList[i]
             v:setData(data)
-
+            v:setEnabled(true)
             if self.state == NORMAL_STATE then
                 v:setState(1)
                 if data and data.isOpen then
@@ -134,15 +151,19 @@ function MainScene:updateUnit()
             end
         end
     else
+        self.autoUnit:setEnabled(false)
         self:hideUnitWidget()
         self.panel:setState(2)
+        self.panel.nameLab:setString(DataMgr.selectFriendName)
+        self.panel.goldLab:setString("金币："..self.companyData.gold)
+        self.panel.scoreLab:setString("产值："..self.companyData.score)
         self.panel:setTakeBtnVisible(not self.companyData.isGetParent)
         self.panel:setTakeHandler(function() NetMgr:steal(self.companyData.tel) end)
         for i, v in ipairs(self.unitList) do
             local data = self.companyData.unitList[i]
             v:setData(data)
             v:setState(1)
-            v:setSelectHandler(function() end)
+            v:setEnabled(false)
         end
     end
 end

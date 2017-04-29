@@ -71,10 +71,16 @@ function Mgr:warn (str)
     local node = cc.Node:create()
     node:setPosition(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2)
     self.uiLayer:addChild(node, 200)
-
+    local bg = display.newSprite("ui/bg_txt_3.png", {capInsets=cc.rect(19, 19, 1, 1), size=cc.size(500, 75)})
+        :addTo(node)
     local lab = cc.Label:createWithSystemFont(str, "Arial", 40)
         :addTo(node)
-    lab:setColor(display.COLOR_TXT)
+    lab:setColor(display.COLOR_TXT_2)
+
+    local size = lab:getContentSize()
+    size.width = math.max(size.width + 50, 450)
+    size.height = size.height + 20
+    bg:setContentSize(size)
 
     local act1 = cc.DelayTime:create(0.5)
     local act2 = cc.CallFunc:create(function()
