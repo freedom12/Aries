@@ -1,0 +1,128 @@
+local Panel = class("ChangePwdPanel", cc.Node)
+
+function Panel:ctor(str)
+    display.newSprite("ui/bg_2.png", {capInsets=cc.rect(113, 101, 2, 2), size=cc.size(840, 545)})
+        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2)
+        :addTo(self)
+
+    display.newSprite("ui/bg_4.png", {capInsets=cc.rect(50, 50, 1, 2), size=cc.size(760, 420)})
+        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2-25)
+        :addTo(self)
+
+    display.newSprite("ui/bg_title.png")
+        :move(CC_DESIGN_RESOLUTION.width/2, 1030)
+        :addTo(self)
+
+    display.newSprite("ui/txt_xiugaimima.png")
+        :move(CC_DESIGN_RESOLUTION.width/2, 1055)
+        :addTo(self)
+
+    self.closeBtn = ccui.Button:create("ui/btn_close.png")
+        :move(CC_DESIGN_RESOLUTION.width/2+840/2, CC_DESIGN_RESOLUTION.height/2+545/2)
+        :addTo(self)
+    self.closeBtn:addEvent(function()
+        UIMgr:hide("ChangePwdPanel")
+    end)
+
+    self.yesBtn = ccui.Button:create("ui/btn_4.png")
+        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2-180)
+        :addTo(self)
+    self.yesBtn.txt = display.newSprite("ui/txt_querenxiugai.png")
+        :move(154/2, 57/2)
+        :addTo(self.yesBtn)
+    self.yesBtn:addEvent(function()
+        self:changePwd()
+    end)
+
+    local lab = cc.Label:createWithSystemFont("旧密码：", "Arial", 40)
+        :move(CC_DESIGN_RESOLUTION.width/2-50, CC_DESIGN_RESOLUTION.height/2+110)
+        :addTo(self)
+    lab:setAlignment(0, 1)
+    lab:setDimensions(500, 40)
+    lab:setColor(display.COLOR_TXT)
+    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(380, 50)})
+        :move(CC_DESIGN_RESOLUTION.width/2+130, CC_DESIGN_RESOLUTION.height/2+110)
+        :addTo(self)
+    self.oldInput = ccui.TextField:create()
+        :move(CC_DESIGN_RESOLUTION.width/2+130, CC_DESIGN_RESOLUTION.height/2+110)
+        :addTo(self)
+    self.oldInput:setPlaceHolder("")
+    self.oldInput:setPlaceHolderColor(cc.c3b(100, 100, 100))
+    self.oldInput:setFontSize(40)
+    self.oldInput:setTextAreaSize(cc.size(380, 50))
+    self.oldInput:setContentSize(cc.size(380, 50))
+    self.oldInput:ignoreContentAdaptWithSize(false)
+    self.oldInput:setTextHorizontalAlignment(1)
+    self.oldInput:setTextVerticalAlignment(1)
+    self.oldInput:setPasswordEnabled(true)
+    self.oldInput:setPasswordStyleText("*")
+
+    local lab = cc.Label:createWithSystemFont("新密码：", "Arial", 40)
+        :move(CC_DESIGN_RESOLUTION.width/2-50, CC_DESIGN_RESOLUTION.height/2+10)
+        :addTo(self)
+    lab:setAlignment(0, 1)
+    lab:setDimensions(500, 40)
+    lab:setColor(display.COLOR_TXT)
+    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(380, 50)})
+        :move(CC_DESIGN_RESOLUTION.width/2+130, CC_DESIGN_RESOLUTION.height/2+10)
+        :addTo(self)
+    self.newInput = ccui.TextField:create()
+        :move(CC_DESIGN_RESOLUTION.width/2+130, CC_DESIGN_RESOLUTION.height/2+10)
+        :addTo(self)
+    self.newInput:setPlaceHolder("")
+    self.newInput:setPlaceHolderColor(cc.c3b(100, 100, 100))
+    self.newInput:setFontSize(40)
+    self.newInput:setTextAreaSize(cc.size(380, 50))
+    self.newInput:setContentSize(cc.size(380, 50))
+    self.newInput:ignoreContentAdaptWithSize(false)
+    self.newInput:setTextHorizontalAlignment(1)
+    self.newInput:setTextVerticalAlignment(1)
+    self.newInput:setPasswordEnabled(true)
+    self.newInput:setPasswordStyleText("*")
+
+    local lab = cc.Label:createWithSystemFont("确认密码：", "Arial", 40)
+        :move(CC_DESIGN_RESOLUTION.width/2-50, CC_DESIGN_RESOLUTION.height/2-90)
+        :addTo(self)
+    lab:setAlignment(0, 1)
+    lab:setDimensions(500, 40)
+    lab:setColor(display.COLOR_TXT)
+    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(380, 50)})
+        :move(CC_DESIGN_RESOLUTION.width/2+130, CC_DESIGN_RESOLUTION.height/2-90)
+        :addTo(self)
+    self.newInput2 = ccui.TextField:create()
+        :move(CC_DESIGN_RESOLUTION.width/2+130, CC_DESIGN_RESOLUTION.height/2-90)
+        :addTo(self)
+    self.newInput2:setPlaceHolder("")
+    self.newInput2:setPlaceHolderColor(cc.c3b(100, 100, 100))
+    self.newInput2:setFontSize(40)
+    self.newInput2:setTextAreaSize(cc.size(380, 50))
+    self.newInput2:setContentSize(cc.size(380, 50))
+    self.newInput2:ignoreContentAdaptWithSize(false)
+    self.newInput2:setTextHorizontalAlignment(1)
+    self.newInput2:setTextVerticalAlignment(1)
+    self.newInput2:setPasswordEnabled(true)
+    self.newInput2:setPasswordStyleText("*")
+end
+
+function Panel:changePwd ()
+    local old = self.oldInput:getString()
+    if not old or old == "" then
+        UIMgr:warn("请输入旧密码")
+        return
+    end
+    local new = self.newInput:getString()
+    if not new or new == "" then
+        UIMgr:warn("请输入新密码")
+        return
+    end
+    local new2 = self.newInput2:getString()
+    if not new2 or new ~= new2 then
+        UIMgr:warn("确认密码不正确")
+        return
+    end
+
+    NetMgr:changePwd(old, new)
+    UIMgr:hide("ChangePwdPanel")
+end
+
+return Panel
