@@ -460,7 +460,8 @@
 				LastUpgradeCheck = 0500;
 				TargetAttributes = {
 					F293B3C715EB7BE500256477 = {
-						DevelopmentTeam = 2N3FCRXTUX;
+						DevelopmentTeam = 6577BW8WA6;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -802,8 +803,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
-				DEVELOPMENT_TEAM = 2N3FCRXTUX;
+				DEVELOPMENT_TEAM = 6577BW8WA6;
 				ENABLE_BITCODE = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -829,6 +831,9 @@
 					"-image_base",
 					100000000,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wanghuai.qmboss;
+				PROVISIONING_PROFILE = "5aa965cc-a0e6-4f3f-a325-4741dcb5167e";
+				PROVISIONING_PROFILE_SPECIFIER = qmboss_dev;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -845,8 +850,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COMPRESS_PNG_FILES = NO;
-				DEVELOPMENT_TEAM = 2N3FCRXTUX;
+				DEVELOPMENT_TEAM = 6577BW8WA6;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ios/Prefix.pch;
@@ -871,6 +877,9 @@
 					"-image_base",
 					100000000,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wanghuai.qmboss;
+				PROVISIONING_PROFILE = "3d984d8a-a758-4193-a18b-ddea2a3b45d7";
+				PROVISIONING_PROFILE_SPECIFIER = qmboss_adh;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

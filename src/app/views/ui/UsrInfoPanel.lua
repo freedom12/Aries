@@ -24,6 +24,9 @@ function Panel:ctor()
     display.newSprite("ui/bg_head_2.png")
         :move(CC_DESIGN_RESOLUTION.width/2-275, CC_DESIGN_RESOLUTION.height/2+80)
         :addTo(self)
+    self.headImg = display.newSprite("img_head_0_2.png")
+        :move(CC_DESIGN_RESOLUTION.width/2-275, CC_DESIGN_RESOLUTION.height/2+67)
+        :addTo(self)
 
     self.closeBtn = ccui.Button:create("ui/btn_close.png")
         :move(CC_DESIGN_RESOLUTION.width/2+840/2, CC_DESIGN_RESOLUTION.height/2+545/2)
@@ -130,6 +133,7 @@ function Panel:setData ()
     self.telLab:setString("手机号：" .. usrData.tel)
     self.wechatLab:setString("微  信：" .. usrData.wechat)
     self.alipayLab:setString("支付宝：" .. usrData.alipay)
+    self.headImg:setTexture("img_head_"..usrData.sex..".png")
 end
 
 function Panel:changeName ()
@@ -141,7 +145,7 @@ function Panel:changePwd ()
 end
 
 function Panel:changeHead ()
-    UIMgr:warn("暂未开启")
+    UIMgr:show("ChangeHeadPanel")
 end
 
 return Panel

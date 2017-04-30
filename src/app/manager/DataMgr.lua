@@ -4,7 +4,8 @@ function Mgr:init ()
     self.data = DataVo.new()
     self.priceCfg = {}
     self.openEmployee = 0
-
+    self.autoTime = 0
+    self.autoCost = 0
     --TODO 临时写法
     self.selectFriendName=""
 end
@@ -28,8 +29,6 @@ function Mgr:setUsr (data)
 end
 
 function Mgr:getUsr ()
-    dump(self.data)
-
     if not self:isLogin() then
         return
     end

@@ -12,7 +12,9 @@ function Mgr:send (url, data, handler, isHideWait)
         if xhr.readyState ~= 4 then
             return
         end
-        UIMgr:hideWait()
+        if not isHideWait then
+            UIMgr:hideWait()
+        end
         if xhr.status ~= 200 then
             print("NET ERROR:", xhr.statusText)
             UIMgr:warn("网络错误")
@@ -47,7 +49,7 @@ function Mgr:login(usr, pwd)
     local url = Mgr.url.."member/login.do?".."gTel="..usr.."&gPassWord="..pwd
     print(url)
     self:send(url, data, function(data)
-        if data.result.code and data.result.code ~= 0 then
+        if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             print("CODE:"..data.result.code.."  MESSAGE:"..data.result.message)
             return
@@ -60,9 +62,7 @@ function Mgr:login(usr, pwd)
         }
         EventMgr:dispatchEvent(e)
 
-        self:getPrice()
-        self:getOpenEmployee()
-        self:updateInfo()
+        self:getConf()
     end)
 end
 
@@ -70,9 +70,8 @@ function Mgr:logout ()
     DataMgr:clear()
     local url = Mgr.url.."member/logout.do"
     self:send(url, data, function(data)
-        if data.code and data.code ~= 0 then
-            UIMgr:warn(data.msg)
-            print("CODE:"..data.code.."  MESSAGE:"..data.msg)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.msg)
             return
         end
         DataMgr:clear()
@@ -116,13 +115,31 @@ function Mgr:changeName (name)
     local url = Mgr.url.."member/updateMemberInfo.do?gUsername="..name
     print(url)
     self:send(url, data, function(data)
-        if data.result.code and data.result.code ~= 0 then
+        if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             return
         end
 
         DataMgr:getUsr().name = name
+        UIMgr:warn("修改名字成功")
+        local e = {
+            name = UPDATE_INFO,
+            data = data
+        }
+        EventMgr:dispatchEvent(e)
+    end)
+end
 
+function Mgr:changeHead (index)
+    local url = Mgr.url.."member/updateMemberInfo.do".."?gSex="..index
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+
+        DataMgr:getUsr().sex = index
+        UIMgr:warn("修改头像成功")
         local e = {
             name = UPDATE_INFO,
             data = data
@@ -134,11 +151,12 @@ end
 function Mgr:changePwd (old, new)
     local url = Mgr.url.."member/updatePassword.do".."?passwordOld="..old.."&passwordNew="..new
     self:send(url, data, function(data)
-        if data.result.code and data.result.code ~= 0 then
+        if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             return
         end
 
+        UIMgr:warn("修改密码成功")
         -- local e = {
         --     name = UPDATE_INFO,
         --     data = data
@@ -167,8 +185,8 @@ end
 function Mgr:getCompanyInfo (tel)
     local url = Mgr.url.."company/getCompanyInfo.do?gTel="..tel
     self:send(url, data, function(data)
-        if data.code and data.code ~= 0 then
-            UIMgr:warn(data.message)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
             return
         end
 
@@ -180,33 +198,61 @@ function Mgr:getCompanyInfo (tel)
     end)
 end
 
-function Mgr:getPrice ()
-    local url = Mgr.url.."company/getEmployeeInfo.do"
+function Mgr:getConf ()
+    local url = Mgr.url.."company/getConfigs.do"
     self:send(url, data, function(data)
-        if data.code and data.code ~= 0 then
-            UIMgr:warn(data.message)
-            return
-        end
-        local str = data.result.employeePrice
-        local list = string.split(str, ",")
-        for i, v in ipairs(list) do
-            list[i] = tonumber(v)
-        end
-        DataMgr.priceCfg = list
-    end)
-end
-
-function Mgr:getOpenEmployee ()
-    local url = Mgr.url.."company/getOpenEmployLevel.do"
-    self:send(url, data, function(data)
-        if data.result.code and data.result.code ~= 0 then
+        if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
             return
         end
-
-        DataMgr.openEmployee = tonumber(data.result.level) or 0
+        local conf = data.result.configs
+        dump(conf)
+        for i, v in pairs(conf) do
+            if v.bossKey == "employee" then
+                local list = string.split(v.bossValue, ",")
+                for j, w in ipairs(list) do
+                    list[j] = tonumber(w)
+                end
+                DataMgr.priceCfg = list
+            elseif v.bossKey == "employee_level" then
+                DataMgr.openEmployee = tonumber(v.bossValue) or 0
+            elseif v.bossKey == "qiantai_day" then
+                DataMgr.autoTime = tonumber(v.bossValue) or 0
+            elseif v.bossKey == "qiantai_price" then
+                DataMgr.autoCost = tonumber(v.bossValue) or 0
+            end
+        end
+        self:updateInfo()
     end)
 end
+
+-- function Mgr:getPrice ()
+--     local url = Mgr.url.."company/getEmployeeInfo.do"
+--     self:send(url, data, function(data)
+--         if data.result and data.result.code and data.result.code ~= 0 then
+--             UIMgr:warn(data.result.message)
+--             return
+--         end
+--         local str = data.result.employeePrice
+--         local list = string.split(str, ",")
+--         for i, v in ipairs(list) do
+--             list[i] = tonumber(v)
+--         end
+--         DataMgr.priceCfg = list
+--     end)
+-- end
+--
+-- function Mgr:getOpenEmployee ()
+--     local url = Mgr.url.."company/getOpenEmployLevel.do"
+--     self:send(url, data, function(data)
+--         if data.result and data.result.code and data.result.code ~= 0 then
+--             UIMgr:warn(data.result.message)
+--             return
+--         end
+--
+--         DataMgr.openEmployee = tonumber(data.result.level) or 0
+--     end)
+-- end
 
 function Mgr:employee (index, type)
     local url = Mgr.url.."company/employee.do?index="..type.."&position="..index
@@ -340,8 +386,9 @@ function Mgr:exchange (num)
     end)
 end
 
-function Mgr:getMail ()
+function Mgr:getMail (isHideWait)
     local url = Mgr.url.."mail/getMails.do"
+    print(url, isHideWait)
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
@@ -353,11 +400,23 @@ function Mgr:getMail ()
             data = data
         }
         EventMgr:dispatchEvent(e)
-    end)
+    end, isHideWait)
 end
 
 function Mgr:readMail (id)
     local url = Mgr.url.."mail/changeState.do?id="..id.."&state=1"
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+
+        self:getMail(true)
+    end)
+end
+
+function Mgr:ensureMail (id)
+    local url = Mgr.url.."mail/changeState.do?id="..id.."&state=3"
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
@@ -509,6 +568,8 @@ function Mgr:transfer (tel, num, password)
             data = data
         }
         EventMgr:dispatchEvent(e)
+
+        self:updateInfo()
     end)
 end
 
@@ -520,6 +581,7 @@ function Mgr:transferEnsure1 (no)
             UIMgr:warn(data.result.message)
             return
         end
+        UIMgr:warn("确认成功")
     end)
 end
 
@@ -531,6 +593,7 @@ function Mgr:transferEnsure2 (no)
             UIMgr:warn(data.result.message)
             return
         end
+        UIMgr:warn("确认成功")
     end)
 end
 

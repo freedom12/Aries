@@ -1,7 +1,6 @@
 local Vo = class("MailVo")
 
 function Vo:ctor(data)
-    dump(data)
     data = data or {}
     self.id = data.id
     self.date = data.gDate

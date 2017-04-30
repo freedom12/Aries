@@ -12,11 +12,6 @@ CompanyVo = require "app.model.CompanyVo"
 UnitVo = require "app.model.UnitVo"
 MailVo = require "app.model.MailVo"
 
-AUTO_COST = 2000
-AUTO_TIME = 7
-
-
-
 
 function MyApp:onCreate()
     math.randomseed(os.time())

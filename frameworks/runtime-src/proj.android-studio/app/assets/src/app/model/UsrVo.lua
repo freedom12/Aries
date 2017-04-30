@@ -9,7 +9,7 @@ function Vo:ctor(data)
     self.pwd = data.gPassword
     self.pwd2 = data.gPasswordii
     self.lvl = data.gLevel
-    self.sex= data.gSex
+    self.sex = tonumber(data.gSex) or 0
     self.wechat = data.gWeixin
     self.alipay = data.gZhifubao
     self.inviteNum = data.gInvitenum

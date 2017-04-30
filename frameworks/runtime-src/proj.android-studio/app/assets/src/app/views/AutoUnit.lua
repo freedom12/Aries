@@ -32,7 +32,7 @@ function Unit:auto()
         UIMgr:warn("已经雇佣")
         return
     end
-    local str = "是否话费"..AUTO_COST.."雇佣一位前台为您工作"..AUTO_TIME.."天？"
+    local str = "是否话费"..DataMgr.autoCost.."雇佣一位前台为您工作"..DataMgr.autoTime.."天？"
     local panel = UIMgr:show("ConfirmPanel", str)
     panel:setYesHandler(function()
         NetMgr:auto()

@@ -8,6 +8,9 @@ function Panel:ctor(selectIndex)
     self.bg = display.newSprite("ui/bg_head.png")
         :move(250, (CC_DESIGN_RESOLUTION.height+display.height)/2-100)
         :addTo(self)
+    self.headImg = display.newSprite("img_head_0.png")
+        :move(65, 65)
+        :addTo(self.bg)
     self.nameBg = display.newSprite("ui/bg_title_2.png")
         :move(70, 0)
         :addTo(self.bg)
@@ -133,7 +136,7 @@ function Panel:setData ()
     local usrData = data.usr
 
     self.nameLab:setString(usrData.name)
-
+    self.headImg:setTexture("img_head_"..usrData.sex..".png")
     local companyData = data.company
     if not companyData then
         return

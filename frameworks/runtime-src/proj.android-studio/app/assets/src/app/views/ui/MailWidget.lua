@@ -71,10 +71,11 @@ function Widget:show ()
     local id = self.data.id
     local type = self.data.transType
     local transferNo = self.data.transferNo
+    local state = self.data.state
     NetMgr:readMail(id)
 
     panel:setNoHandler(function()
-        NetMgr:delMail(id)
+        -- NetMgr:delMail(id)
         UIMgr:hide("ConfirmPanel")
     end)
 
@@ -83,7 +84,7 @@ function Widget:show ()
         panel.yesBtn:setTitleText("确认")
         panel.yesBtn:setTitleFontSize(30)
         panel.noBtn.txt:setVisible(false)
-        panel.noBtn:setTitleText("删除")
+        panel.noBtn:setTitleText("取消")
         panel.noBtn:setTitleFontSize(30)
         panel:setYesHandler(function()
             UIMgr:hide("ConfirmPanel")
@@ -92,7 +93,11 @@ function Widget:show ()
             elseif type == 2 then
                 NetMgr:transferEnsure2(transferNo)
             end
+            NetMgr:ensureMail(id)
         end)
+        if state == 3 then
+            panel.yesBtn:setEnabled(false)
+        end
     else
         panel.yesBtn:setVisible(false)
         panel.noBtn:setPositionX(CC_DESIGN_RESOLUTION.width/2)

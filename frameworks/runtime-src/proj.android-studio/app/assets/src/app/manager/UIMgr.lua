@@ -82,7 +82,7 @@ function Mgr:warn (str)
     size.height = size.height + 20
     bg:setContentSize(size)
 
-    local act1 = cc.DelayTime:create(0.5)
+    local act1 = cc.DelayTime:create(1)
     local act2 = cc.CallFunc:create(function()
         node:removeFromParent()
     end)
