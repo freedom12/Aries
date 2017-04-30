@@ -1,5 +1,5 @@
 local Mgr = {}
-Mgr.url = "http://www.qmboss.top:8080/bossCountry/"
+Mgr.url = "https://www.qmboss.top:8443/bossCountry/"
 Mgr.session = ""
 function Mgr:send (url, data, handler, isHideWait)
     local xhr = cc.XMLHttpRequest:new()
