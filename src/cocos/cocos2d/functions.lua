@@ -631,6 +631,11 @@ function string.formatnumberthousands(num)
     return formatted
 end
 
+function string.isNumOrChar(str)
+    str = str or ""
+    return string.match(str,"%w+")==str
+end
+
 function ccui.Button:addEvent (handler, isNoSound)
     self:addTouchEventListener(function(obj, event)
         if event == 2 then

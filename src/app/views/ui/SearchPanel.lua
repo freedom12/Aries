@@ -44,6 +44,8 @@ function Panel:ctor()
     self.telInput:ignoreContentAdaptWithSize(false)
     self.telInput:setTextHorizontalAlignment(1)
     self.telInput:setTextVerticalAlignment(1)
+    self.telInput:setMaxLengthEnabled(true)
+    self.telInput:setMaxLength(11)
 
     self.searchBtn = ccui.Button:create("ui/btn_3.png")
         :move(CC_DESIGN_RESOLUTION.width/2+300, CC_DESIGN_RESOLUTION.height/2-25+185)
@@ -74,6 +76,8 @@ function Panel:ctor()
     self.numInput:ignoreContentAdaptWithSize(false)
     self.numInput:setTextHorizontalAlignment(1)
     self.numInput:setTextVerticalAlignment(1)
+    self.numInput:setMaxLengthEnabled(true)
+    self.numInput:setMaxLength(8)
     self.numInput:addEventListener(function(object, event)
         if event == ccui.TextFiledEventType.detach_with_ime then
             local num = tonumber(self.numInput:getString()) or 0
@@ -169,6 +173,10 @@ function Panel:transfer ()
     local tel = self.data.tel
     if not tel or tel == "" then
         UIMgr:warn("请输入搜索手机号")
+        return
+    end
+    if not tonumber(tel) then
+        UIMgr:warn("手机号不正确")
         return
     end
     local num = tonumber(self.numInput:getString()) or 0

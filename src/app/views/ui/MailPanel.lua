@@ -76,7 +76,7 @@ function Panel:setData(data)
     end
     self.data = data.result.list
     table.sort(self.data, function(a, b)
-        return a.gDate > b.gDate
+        return a.gDate < b.gDate
     end)
     local size = self.scroll:getContentSize()
     local num = #self.data

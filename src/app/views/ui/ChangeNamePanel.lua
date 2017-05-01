@@ -49,6 +49,8 @@ function Panel:ctor(str)
     self.usrInput:ignoreContentAdaptWithSize(false)
     self.usrInput:setTextHorizontalAlignment(1)
     self.usrInput:setTextVerticalAlignment(1)
+    self.usrInput:setMaxLengthEnabled(true)
+    self.usrInput:setMaxLength(11)
 end
 
 function Panel:changeName ()

@@ -52,7 +52,7 @@ end
 function Mgr:showWait ()
     if self.waitPanelCount == 0 then
         self.waitPanel = self:show("WaitPanel")
-        self.waitPanel:setLocalZOrder(100)
+        self.waitPanel.maskLayer:setLocalZOrder(200)
     end
     self.waitPanelCount = self.waitPanelCount + 1
 end

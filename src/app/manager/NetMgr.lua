@@ -32,8 +32,11 @@ function Mgr:send (url, data, handler, isHideWait)
             session = string.trim(session)
             self.session = session
         end
+
         response = json.decode(xhr.response, 1)
-        dump(response)
+        if not isHideWait then
+            dump(response)
+        end
         handler(response)
     end
 
@@ -46,6 +49,12 @@ function Mgr:send (url, data, handler, isHideWait)
 end
 
 function Mgr:login(usr, pwd)
+    if not string.isNumOrChar(pwd) then
+        UIMgr:warn("密码包含非数字或字母")
+        return
+    end
+    -- pwd = string.urlencode(pwd)
+    -- usr = string.urlencode(usr)
     local url = Mgr.url.."member/login.do?".."gTel="..usr.."&gPassWord="..pwd
     print(url)
     self:send(url, data, function(data)
@@ -112,7 +121,9 @@ function Mgr:updateInfo ()
 end
 
 function Mgr:changeName (name)
-    local url = Mgr.url.."member/updateMemberInfo.do?gUsername="..name
+    -- name = string.urlencode(name)
+    local url = Mgr.url.."member/updateMemberInfo.do?"
+    local data = "gUsername="..name
     print(url)
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
@@ -149,6 +160,16 @@ function Mgr:changeHead (index)
 end
 
 function Mgr:changePwd (old, new)
+    if not string.isNumOrChar(old) then
+        UIMgr:warn("旧密码包含非数字或字母")
+        return
+    end
+    if not string.isNumOrChar(new) then
+        UIMgr:warn("新密码包含非数字或字母")
+        return
+    end
+    -- old = string.urlencode(old)
+    -- new = string.urlencode(new)
     local url = Mgr.url.."member/updatePassword.do".."?passwordOld="..old.."&passwordNew="..new
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
@@ -183,6 +204,7 @@ function Mgr:getUsrInfo ()
 end
 
 function Mgr:getCompanyInfo (tel)
+    -- tel = string.urlencode(tel)
     local url = Mgr.url.."company/getCompanyInfo.do?gTel="..tel
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
@@ -292,9 +314,28 @@ function Mgr:upgrade (index, type)
 end
 
 function Mgr:regist (name, tel, pwd, wechat, alipay)
-    local url = Mgr.url.."member/registMember.do?gUsername="..name.."&gPassword="..pwd
-        .."&gTel="..tel.."&gWeixin="..wechat.."&gZhifubao="..alipay.."&gIsLock=0"
+    if not string.isNumOrChar(pwd) then
+        UIMgr:warn("密码包含非数字或字母")
+        return
+    end
+    if not string.isNumOrChar(wechat) then
+        UIMgr:warn("微信包含非数字或字母")
+        return
+    end
+    if not string.isNumOrChar(alipay) then
+        UIMgr:warn("支付宝包含非数字或字母")
+        return
+    end
+    -- name = string.urlencode(name)
+    -- tel = string.urlencode(tel)
+    -- pwd = string.urlencode(pwd)
+    -- wechat = string.urlencode(wechat)
+    -- alipay = string.urlencode(alipay)
+    local url = Mgr.url.."member/registMember.do"
     print(url)
+    local data = "gUsername="..name.."&gPassword="..pwd
+        .."&gTel="..tel.."&gWeixin="..wechat.."&gZhifubao="..alipay.."&gIsLock=0"
+    print(data)
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
@@ -386,9 +427,9 @@ function Mgr:exchange (num)
     end)
 end
 
-function Mgr:getMail (isHideWait)
+function Mgr:getMail ()
     local url = Mgr.url.."mail/getMails.do"
-    print(url, isHideWait)
+    print(url)
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
             UIMgr:warn(data.result.message)
@@ -400,7 +441,7 @@ function Mgr:getMail (isHideWait)
             data = data
         }
         EventMgr:dispatchEvent(e)
-    end, isHideWait)
+    end)
 end
 
 function Mgr:readMail (id)
@@ -411,7 +452,8 @@ function Mgr:readMail (id)
             return
         end
 
-        self:getMail(true)
+        self:getMail()
+        self:updateInfo()
     end)
 end
 
@@ -522,6 +564,7 @@ function Mgr:steal (tel)
 end
 
 function Mgr:sendSuggest (str)
+    str = string.urlencode(str)
     local url = Mgr.url.."memberMsg/addMessageMsg.do?message="..str
     self:send(url, data, function(data)
         if data.result and data.result.code and data.result.code ~= 0 then
@@ -538,6 +581,7 @@ function Mgr:sendSuggest (str)
 end
 
 function Mgr:search (tel)
+    -- tel = string.urlencode(tel)
     local url = Mgr.url.."transfer/getReceiverName.do?tel="..tel
         print(url)
     self:send(url, data, function(data)
@@ -555,6 +599,11 @@ function Mgr:search (tel)
 end
 
 function Mgr:transfer (tel, num, password)
+    if not string.isNumOrChar(password) then
+        UIMgr:warn("密码包含非数字或字母")
+        return
+    end
+    -- password = string.urlencode(password)
     local url = Mgr.url.."transfer/apply.do?toTel="..tel.."&amount="..num.."&passwordii="..password
     print(url)
     self:send(url, data, function(data)

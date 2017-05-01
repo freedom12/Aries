@@ -4,7 +4,7 @@ function Vo:ctor(data)
     data = data or {}
 
     self.id = data.id
-    self.name= data.gUsername
+    self.name = data.gUsername
     self.tel = data.gTel
     self.pwd = data.gPassword
     self.pwd2 = data.gPasswordii
@@ -14,8 +14,9 @@ function Vo:ctor(data)
     self.alipay = data.gZhifubao
     self.inviteNum = data.gInvitenum
     self.extraRate = data.gExtrarate
-    self.isLock= (tonumber(data.gIslock) == 1)
+    self.isLock = (tonumber(data.gIslock) == 1)
 
+    self.parentTel = data.gParenttel or 0
     self.address = data.gAddraddress
     self.postCode = data.gAddrpostcode
 
