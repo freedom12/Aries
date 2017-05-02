@@ -52,7 +52,7 @@ function Widget:setData (data)
         type = "转账信息"
     end
 
-    if self.data.state == 1 then
+    if self.data.state == 1 or self.data.state == 3 then
         local glProgramState = cc.GLProgramState:getOrCreateWithGLProgramName("ShaderUIGrayScale")
         self.bg:setGLProgramState(glProgramState)
         self.img:setGLProgramState(glProgramState)
@@ -67,13 +67,14 @@ function Widget:show ()
     local str = self.data.content .. "\n\n                                       "..date
     local panel = UIMgr:show("ConfirmPanel", str)
     panel.lab:setAlignment(0, 1)
-
+    dump(self.data)
     local id = self.data.id
     local type = self.data.transType
     local transferNo = self.data.transferNo
     local state = self.data.state
-    NetMgr:readMail(id)
-
+    if state == 0 then
+        NetMgr:readMail(id)
+    end
     panel:setNoHandler(function()
         -- NetMgr:delMail(id)
         UIMgr:hide("ConfirmPanel")

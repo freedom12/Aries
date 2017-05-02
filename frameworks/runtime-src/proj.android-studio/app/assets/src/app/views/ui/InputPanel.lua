@@ -13,7 +13,7 @@ function Panel:ctor(str)
         :move(CC_DESIGN_RESOLUTION.width/2+840/2, CC_DESIGN_RESOLUTION.height/2+545/2)
         :addTo(self)
     self.closeBtn:addEvent(function()
-        UIMgr:hide("ConfirmPanel")
+        UIMgr:hide("InputPanel")
     end)
 
     self.yesBtn = ccui.Button:create("ui/btn_2.png")
@@ -23,7 +23,7 @@ function Panel:ctor(str)
         :move(209/2, 72/2)
         :addTo(self.yesBtn)
     self.yesBtn:addEvent(function()
-        UIMgr:hide("ConfirmPanel")
+        UIMgr:hide("InputPanel")
     end)
 
     display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(600, 50)})
@@ -39,6 +39,8 @@ function Panel:ctor(str)
     self.input:ignoreContentAdaptWithSize(false)
     self.input:setTextHorizontalAlignment(1)
     self.input:setTextVerticalAlignment(1)
+    self.input:setMaxLengthEnabled(true)
+    self.input:setMaxLength(11)
 end
 
 function Panel:setPwd ()
@@ -58,7 +60,7 @@ end
 
 function Panel:setCloseHandler (handler)
     self.closeBtn:addEvent(function()
-        UIMgr:hide("ConfirmPanel")
+        UIMgr:hide("InputPanel")
     end)
 end
 

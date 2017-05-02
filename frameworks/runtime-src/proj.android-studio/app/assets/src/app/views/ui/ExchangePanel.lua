@@ -2,6 +2,7 @@ local Panel = class("ExchangePanel", cc.Node)
 
 function Panel:ctor()
     self.num = 0
+    self.times = 10
     -- display.newSprite("ui/bg_2.png", {capInsets=cc.rect(113, 101, 2, 2), size=cc.size(660, 490)})
     --     :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2)
     --     :addTo(self)
@@ -19,7 +20,7 @@ function Panel:ctor()
         :addTo(self)
     lab:setColor(display.COLOR_TXT)
 
-    local lab = cc.Label:createWithSystemFont("请输入100的整数倍", "Arial", 25)
+    local lab = cc.Label:createWithSystemFont("请输入"..self.times.."的整数倍", "Arial", 25)
         :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2-35)
         :addTo(self)
     lab:setColor(display.COLOR_TXT)
@@ -39,14 +40,14 @@ function Panel:ctor()
         :move(CC_DESIGN_RESOLUTION.width/2+150, CC_DESIGN_RESOLUTION.height/2+25)
         :addTo(self)
     self.addBtn:addEvent(function()
-        self:setNum(self.num + 100)
+        self:setNum(self.num + self.times)
     end)
 
     self.decBtn = ccui.Button:create("ui/btn_dec.png")
         :move(CC_DESIGN_RESOLUTION.width/2-150, CC_DESIGN_RESOLUTION.height/2+25)
         :addTo(self)
     self.decBtn:addEvent(function()
-        self:setNum(self.num - 100)
+        self:setNum(self.num - self.times)
     end)
 
     self.yesBtn = ccui.Button:create("ui/btn_2.png")
@@ -77,7 +78,7 @@ function Panel:setNum (num)
     if num < 0 then
         num = 0
     end
-    num = math.floor(num/100)*100
+    num = math.floor(num/self.times)*self.times
     self.num = num
     self.numInput:setString(num)
 end

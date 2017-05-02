@@ -63,7 +63,7 @@ function Panel:onEnter ()
         if self.index == 1 then
             self:setData(e.data.friends)
         else
-            self:setData(e.data.list)
+            self:setData(e.data.result.list)
         end
     end)
 end
@@ -95,7 +95,7 @@ function Panel:setData (data)
         v:removeFromParent()
     end
     self.widgetList = {}
-
+    dump(data)
     if not data then
         return
     end
