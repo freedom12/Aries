@@ -20,6 +20,9 @@
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
+    <facet type="Lua" name="Lua">
+      <configuration SdkName="Kahlua" />
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
@@ -98,8 +101,5 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="libcocos2dx" exported="" />
-    <orderEntry type="library" exported="" name="com.android.vending.expansion.zipfile" level="project" />
-    <orderEntry type="library" exported="" name="httpclient-4.4.1.1" level="project" />
-    <orderEntry type="library" exported="" name="android-async-http-1.4.9" level="project" />
   </component>
 </module>

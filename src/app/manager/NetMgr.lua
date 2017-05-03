@@ -347,6 +347,8 @@ function Mgr:regist (name, tel, pwd, wechat, alipay)
             data = data
         }
         EventMgr:dispatchEvent(e)
+
+        self:updateInfo()
     end)
 end
 
