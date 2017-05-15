@@ -1,19 +1,25 @@
 local Widget = class("FriendWidget", cc.Node)
 
-function Widget:ctor(data)
+function Widget:ctor(index, data)
+    self.index = index or 0
     self.data = data
     self.bg = display.newSprite("ui/bg_item_1.png", {capInsets=cc.rect(66, 66, 1, 1), size=cc.size(690, 135)})
         :addTo(self)
 
+    self.indexLab = cc.Label:createWithSystemFont(self.index, "Arial", 35)
+        :move(-300, 0)
+        :addTo(self)
+    self.indexLab:setColor(display.COLOR_TXT)
+
     self.nameLab = cc.Label:createWithSystemFont("", "Arial", 35)
-        :move(-100, 25)
+        :move(-50, 25)
         :addTo(self)
     self.nameLab:setColor(display.COLOR_TXT)
     self.nameLab:setAlignment(0, 1)
     self.nameLab:setDimensions(400, 35)
 
     self.telLab = cc.Label:createWithSystemFont("", "Arial", 35)
-        :move(-100, -25)
+        :move(-50, -25)
         :addTo(self)
     self.telLab:setColor(display.COLOR_TXT)
     self.telLab:setAlignment(0, 1)

@@ -31,21 +31,14 @@ function Panel:ctor()
     lab:setAlignment(0, 1)
     lab:setDimensions(200, 40)
     lab:setColor(display.COLOR_TXT)
-    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(370, 42)})
+    self.telInput = ccui.EditBox:create(cc.size(370, 42), "ui/bg_txt_2.png")
         :move(CC_DESIGN_RESOLUTION.width/2-30, CC_DESIGN_RESOLUTION.height/2-25+185)
         :addTo(self)
-    self.telInput = ccui.TextField:create()
-        :move(CC_DESIGN_RESOLUTION.width/2-30, CC_DESIGN_RESOLUTION.height/2-25+185)
-        :addTo(self)
-    self.telInput:setFontSize(40)
+    self.telInput:setFont("Arial", 40)
     self.telInput:setPlaceHolder("请输入手机号")
-    self.telInput:setTextAreaSize(cc.size(370, 42))
-    self.telInput:setContentSize(cc.size(370, 42))
-    self.telInput:ignoreContentAdaptWithSize(false)
     self.telInput:setTextHorizontalAlignment(1)
-    self.telInput:setTextVerticalAlignment(1)
-    self.telInput:setMaxLengthEnabled(true)
     self.telInput:setMaxLength(11)
+    self.telInput:setInputMode(cc.EDITBOX_INPUT_MODE_PHONENUMBER)
 
     self.searchBtn = ccui.Button:create("ui/btn_3.png")
         :move(CC_DESIGN_RESOLUTION.width/2+300, CC_DESIGN_RESOLUTION.height/2-25+185)
@@ -63,29 +56,22 @@ function Panel:ctor()
     lab:setAlignment(0, 1)
     lab:setDimensions(200, 40)
     lab:setColor(display.COLOR_TXT)
-    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(370, 42)})
+    self.numInput = ccui.EditBox:create(cc.size(370, 42), "ui/bg_txt_2.png")
         :move(CC_DESIGN_RESOLUTION.width/2-30, CC_DESIGN_RESOLUTION.height/2-25-185)
         :addTo(self)
-    self.numInput = ccui.TextField:create()
-        :move(CC_DESIGN_RESOLUTION.width/2-30, CC_DESIGN_RESOLUTION.height/2-25-185)
-        :addTo(self)
-    self.numInput:setFontSize(40)
+    self.numInput:setFont("Arial", 40)
     self.numInput:setPlaceHolder("请输入10的倍数")
-    self.numInput:setTextAreaSize(cc.size(370, 42))
-    self.numInput:setContentSize(cc.size(370, 42))
-    self.numInput:ignoreContentAdaptWithSize(false)
     self.numInput:setTextHorizontalAlignment(1)
-    self.numInput:setTextVerticalAlignment(1)
-    self.numInput:setMaxLengthEnabled(true)
     self.numInput:setMaxLength(8)
-    self.numInput:addEventListener(function(object, event)
-        if event == ccui.TextFiledEventType.detach_with_ime then
-            local num = tonumber(self.numInput:getString()) or 0
+    self.numInput:setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC)
+    self.numInput:onEditHandler(function(event)
+        if event.name == "return" then
+            local num = tonumber(self.numInput:getText()) or 0
             if num <= 0 then
                 num = 0
             end
             num = math.floor(num/10)*10
-            self.numInput:setString(num)
+            self.numInput:setText(num)
         end
     end)
 
@@ -158,7 +144,7 @@ function Panel:setData (data)
 end
 
 function Panel:search()
-    local tel = self.telInput:getString()
+    local tel = self.telInput:getText()
     if not tel or tel == "" then
         UIMgr:warn("请输入搜索手机号")
         return
@@ -179,7 +165,7 @@ function Panel:transfer ()
         UIMgr:warn("手机号不正确")
         return
     end
-    local num = tonumber(self.numInput:getString()) or 0
+    local num = tonumber(self.numInput:getText()) or 0
     if num <= 0 then
         UIMgr:warn("请输入转账金额")
         return

@@ -93,17 +93,17 @@ function Panel:ctor()
     end)
 
     self.wechatLab = cc.Label:createWithSystemFont("微  信：--", "Arial", 35)
-        :move(CC_DESIGN_RESOLUTION.width/2+90, CC_DESIGN_RESOLUTION.height/2+125-d*4)
+        :move(CC_DESIGN_RESOLUTION.width/2+190, CC_DESIGN_RESOLUTION.height/2+125-d*4)
         :addTo(self)
     self.wechatLab:setAlignment(0, 1)
-    self.wechatLab:setDimensions(500, 40)
+    self.wechatLab:setDimensions(700, 40)
     self.wechatLab:setColor(display.COLOR_TXT)
 
     self.alipayLab = cc.Label:createWithSystemFont("支付宝：--", "Arial", 35)
-        :move(CC_DESIGN_RESOLUTION.width/2+90, CC_DESIGN_RESOLUTION.height/2+125-d*5)
+        :move(CC_DESIGN_RESOLUTION.width/2+190, CC_DESIGN_RESOLUTION.height/2+125-d*5)
         :addTo(self)
     self.alipayLab:setAlignment(0, 1)
-    self.alipayLab:setDimensions(500, 40)
+    self.alipayLab:setDimensions(700, 40)
     self.alipayLab:setColor(display.COLOR_TXT)
 
 

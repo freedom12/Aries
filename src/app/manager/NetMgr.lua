@@ -318,12 +318,12 @@ function Mgr:regist (name, tel, pwd, wechat, alipay)
         UIMgr:warn("密码包含非数字或字母")
         return
     end
-    if not string.isNumOrChar(wechat) then
-        UIMgr:warn("微信包含非数字或字母")
+    if not string.isNumOrCharOrSymbol(wechat) then
+        UIMgr:warn("微信包含不合法的字符")
         return
     end
-    if not string.isNumOrChar(alipay) then
-        UIMgr:warn("支付宝包含非数字或字母")
+    if not string.isNumOrCharOrSymbol(alipay) then
+        UIMgr:warn("支付宝包含不合法的字符")
         return
     end
     -- name = string.urlencode(name)
@@ -493,6 +493,22 @@ function Mgr:getRateLog ()
 
         local e = {
             name = RATE_LOG,
+            data = data
+        }
+        EventMgr:dispatchEvent(e)
+    end)
+end
+
+function Mgr:getTotalRate ()
+    local url = Mgr.url.."company/getTotalBenefitRate.do"
+    self:send(url, data, function(data)
+        if data.result and data.result.code and data.result.code ~= 0 then
+            UIMgr:warn(data.result.message)
+            return
+        end
+
+        local e = {
+            name = TOTAL_RATE,
             data = data
         }
         EventMgr:dispatchEvent(e)

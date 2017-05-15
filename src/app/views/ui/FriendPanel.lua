@@ -106,7 +106,7 @@ function Panel:setData (data)
     self.scroll:setInnerContainerSize(cc.size(size.width, h))
     local size = self.scroll:getInnerContainerSize()
     for i = 1, num do
-        local widget = Widget.new(UsrVo.new(self.data[i]))
+        local widget = Widget.new(i, UsrVo.new(self.data[i]))
         widget:setPosition(30+690/2, 15+135/2+(i-1)*(135+15)+size.height-h)
         self.scroll:addChild(widget)
         table.insert(self.widgetList, widget)

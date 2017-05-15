@@ -25,14 +25,17 @@ function Panel:ctor()
         :addTo(self)
     lab:setColor(display.COLOR_TXT)
 
-    self.numInput = ccui.TextField:create()
+    self.numInput = ccui.EditBox:create(cc.size(220, 42), "ui/bg_txt_2.png")
         :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+25)
         :addTo(self)
-    self.numInput:setFontSize(40)
-    self.numInput:setPlaceHolder("0")
-    self.numInput:addEventListener(function(object, event)
-        if event == ccui.TextFiledEventType.detach_with_ime then
-            self:setNum(self.numInput:getString())
+    self.numInput:setFont("Arial", 40)
+    -- self.numInput:setPlaceHolder("0")
+    self.numInput:setTextHorizontalAlignment(1)
+    self.numInput:setMaxLength(8)
+    self.numInput:setInputMode(cc.EDITBOX_INPUT_MODE_NUMERIC)
+    self.numInput:onEditHandler(function(event)
+        if event.name == "return" then
+            self:setNum(self.numInput:getText())
         end
     end)
 
@@ -80,7 +83,7 @@ function Panel:setNum (num)
     end
     num = math.floor(num/self.times)*self.times
     self.num = num
-    self.numInput:setString(num)
+    self.numInput:setText(num)
 end
 
 function Panel:exchange ()

@@ -24,12 +24,17 @@ function Panel:ctor()
         :addTo(self)
     self.tabList[1]:addEvent(function() self:select(1) end)
     self.tabList[2] = ccui.Button:create("ui/btn_m_1.png")
-        :move(CC_DESIGN_RESOLUTION.width/2-275+220, CC_DESIGN_RESOLUTION.height/2+220)
+        :move(CC_DESIGN_RESOLUTION.width/2-75, CC_DESIGN_RESOLUTION.height/2+220)
         :addTo(self)
     self.tabList[2]:addEvent(function() self:select(2) end)
 
     -- self.tabList[1]:setVisible(false)
     self.tabList[2]:setVisible(false)
+
+    self.totalRateLab = cc.Label:createWithSystemFont("", "Arial", 35)
+        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+220)
+        :addTo(self)
+    self.totalRateLab:setColor(display.COLOR_TXT)
 
     self.node = cc.Node:create()
     self.node:setPosition(CC_DESIGN_RESOLUTION.width/2-325, CC_DESIGN_RESOLUTION.height/2-175)
@@ -44,6 +49,9 @@ function Panel:onEnter ()
     self.eventList = {}
     self.eventList[1] = EventMgr:addEventListener(RATE_LOG, function(e)
         self:setData(e.data)
+    end)
+    self.eventList[2] = EventMgr:addEventListener(TOTAL_RATE, function(e)
+        self:setTotalRate(e.data)
     end)
 end
 
@@ -63,6 +71,7 @@ function Panel:select (index)
         self.tabList[1]:loadTextureNormal("ui/btn_d_2.png")
         self.tabList[2]:loadTextureNormal("ui/btn_m_1.png")
         NetMgr:getRateLog()
+        NetMgr:getTotalRate()
     else
         self.tabList[1]:loadTextureNormal("ui/btn_d_1.png")
         self.tabList[2]:loadTextureNormal("ui/btn_m_2.png")
@@ -73,6 +82,7 @@ function Panel:setData (data)
     if not data then
         return
     end
+    self.node:setVisible(true)
     self.data = data.result.list
     local max = 0
     for i, v in ipairs(self.data) do
@@ -128,10 +138,11 @@ function Panel:setData (data)
         return a.validDate < b.validDate
     end)
     local index = 0
-    for i = math.max(#self.data-7, 1), #self.data do
+    for i = math.max(#self.data-7+1, 1), #self.data do
         index = index + 1
         local v = self.data[i]
         local list = string.split(v.validDate, "-")
+
         self.dateLabList[index]:setString(list[2].."."..list[3])
         local rate = v.rateDay
         local img = display.newSprite("ui/shape_2.png")
@@ -141,12 +152,17 @@ function Panel:setData (data)
         img:setScaleY(max/nh*dh*rate/img:getContentSize().height)
 
         local lab = cc.Label:createWithSystemFont(rate, "Arial", 25)
-            :move(dw*i, max/nh*dh*rate+20)
+            :move(dw*index, max/nh*dh*rate+20)
             :addTo(self.node)
         lab:setColor(display.COLOR_TXT)
         lab:setAlignment(1, 1)
         lab:setDimensions(70, 25)
     end
+end
+
+function Panel:setTotalRate (data)
+    self.totalRateLab:setVisible(true)
+    self.totalRateLab:setString("您的今日拆分率："..data.result.totalRate)
 end
 
 return Panel

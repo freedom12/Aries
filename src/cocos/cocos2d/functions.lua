@@ -633,7 +633,12 @@ end
 
 function string.isNumOrChar(str)
     str = str or ""
-    return string.match(str,"%w+")==str
+    return string.match(str,"[%w]+")==str
+end
+
+function string.isNumOrCharOrSymbol(str)
+    str = str or ""
+    return string.match(str,"[%w_%-%.@]+")==str
 end
 
 function ccui.Button:addEvent (handler, isNoSound)

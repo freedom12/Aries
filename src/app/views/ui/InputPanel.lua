@@ -26,30 +26,23 @@ function Panel:ctor(str)
         UIMgr:hide("InputPanel")
     end)
 
-    display.newSprite("ui/bg_txt_2.png", {capInsets=cc.rect(18, 18, 2, 1), size=cc.size(600, 50)})
+    self.input = ccui.EditBox:create(cc.size(600, 50), "ui/bg_txt_2.png")
         :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+70)
         :addTo(self)
-    self.input = ccui.TextField:create()
-        :move(CC_DESIGN_RESOLUTION.width/2, CC_DESIGN_RESOLUTION.height/2+70)
-        :addTo(self)
-    self.input:setFontSize(40)
+    self.input:setFont("Arial", 40)
     self.input:setPlaceHolder(str or "")
-    self.input:setTextAreaSize(cc.size(600, 42))
-    self.input:setContentSize(cc.size(600, 42))
-    self.input:ignoreContentAdaptWithSize(false)
     self.input:setTextHorizontalAlignment(1)
-    self.input:setTextVerticalAlignment(1)
-    self.input:setMaxLengthEnabled(true)
     self.input:setMaxLength(11)
+    self.input:setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE)
+    self.input:setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD)
 end
 
 function Panel:setPwd ()
-    self.input:setPasswordEnabled(true)
-    self.input:setPasswordStyleText("*")
+    self.input:setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD)
 end
 
 function Panel:getStr ()
-    return self.input:getString()
+    return self.input:getText()
 end
 
 function Panel:setYesHandler (handler)
